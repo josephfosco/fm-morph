@@ -155,7 +155,7 @@
                   :env-r-c 5.0
                   :freq-ratio 1     :vol 1
                   }
-                 {:out-mod-lvl0 500 :out-mod-lvl1 0
+                 {:out-mod-lvl0 200 :out-mod-lvl1 0
                   :out-mod-lvl2 0   :out-mod-lvl3 0
                   :out-mod-lvl4 0   :out-mod-lvl5 0
                   :out-mod-lvl6 0   :out-mod-lvl7 0
@@ -178,7 +178,7 @@
                   :freq-ratio 3     :vol 0
                   }
                  {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 300 :out-mod-lvl3 0
+                  :out-mod-lvl2 600 :out-mod-lvl3 0
                   :out-mod-lvl4 0   :out-mod-lvl5 0
                   :out-mod-lvl6 0   :out-mod-lvl7 0
                   :env-d-l 1        :env-s-l 0.5
@@ -189,7 +189,7 @@
                   :freq-ratio 4     :vol 0
                   }
                  {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 200
+                  :out-mod-lvl2 0   :out-mod-lvl3 800
                   :out-mod-lvl4 0   :out-mod-lvl5 0
                   :out-mod-lvl6 0   :out-mod-lvl7 0
                   :env-d-l 1        :env-s-l 0.5
@@ -201,7 +201,7 @@
                   }
                  {:out-mod-lvl0 0   :out-mod-lvl1 0
                   :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 100 :out-mod-lvl5 0
+                  :out-mod-lvl4 1000 :out-mod-lvl5 0
                   :out-mod-lvl6 0   :out-mod-lvl7 0
                   :env-d-l 1        :env-s-l 0.5
                   :env-dly-t 1      :env-a-t 0.1
@@ -212,7 +212,7 @@
                   }
                  {:out-mod-lvl0 0   :out-mod-lvl1 0
                   :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 75
+                  :out-mod-lvl4 0   :out-mod-lvl5 1200
                   :out-mod-lvl6 0   :out-mod-lvl7 0
                   :env-d-l 1        :env-s-l 0.5
                   :env-dly-t 1      :env-a-t 0.1
@@ -224,7 +224,7 @@
                  {:out-mod-lvl0 0   :out-mod-lvl1 0
                   :out-mod-lvl2 0   :out-mod-lvl3 0
                   :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 50  :out-mod-lvl7 0
+                  :out-mod-lvl6 1400 :out-mod-lvl7 0
                   :env-d-l 1        :env-s-l 0.5
                   :env-dly-t 1      :env-a-t 0.1
                   :env-d-t 0.3      :env-r-t 1.0
@@ -360,17 +360,15 @@
   )
 
 (doseq [synth env-synths]
-  (ctl synth :env-a-t 3.0)
+  (ctl synth :env-r-t 3.0)
   )
 
 (ctl (cntl-synths 5) :freq-ratio 3.6)
-(ctl (cntl-synths 0) :out-mod-lvl 0)
 (ctl (cntl-synths 0) :volume 0)
-(ctl (cntl-synths 2) :freq-ratio 2.3)
-(ctl (cntl-synths 2) :out-mod-lvl1 500)
-(ctl (cntl-synths 4) :volume 1)
-(ctl (mod-lvl-synths 5) :out-mod-lvl4 800.00)
-(ctl (mod-lvl-synths 6) :out-mod-lvl5 00.0)
+(ctl (cntl-synths 7) :freq-ratio 10.0)
+(ctl (cntl-synths 7) :volume 0.2)
+(ctl (mod-lvl-synths 5) :out-mod-lvl4 200.00)
+(ctl (mod-lvl-synths 6) :out-mod-lvl1 400.0)
 (control-bus-get ((cntl-buses 0) 0))
 (control-bus-get ((cntl-buses 0) 1))
 (control-bus-get ((cntl-buses 0) 2))
@@ -382,7 +380,7 @@
 
 (defn reset-cbuses
   []
-  (doseq [oper num-operators]
+  (dotimes [oper num-operators]
     (let [parms (cntl-parms oper)]
       (ctl (mod-lvl-synths oper)
            :out-mod-lvl0 (or (:out-mod-lvl0 parms) 0)
