@@ -288,59 +288,59 @@
          ))
   )
 
-  (defsynth fm-oper
-    [
-     in-mod-bus 3
-     out-mod-bus 2
-     cntl-bus 7
-     action NO-ACTION
-     gate 0
-     ]
-    (let [
-          [mod-lvl0
-           mod-lvl1
-           mod-lvl2
-           mod-lvl3
-           mod-lvl4
-           mod-lvl5
-           mod-lvl6
-           mod-lvl7
-           env-d-l
-           env-s-l
-           env-dly-t
-           env-a-t
-           env-d-t
-           env-r-t
-           env-a-c
-           env-d-c
-           env-r-c
-           freq-ratio
-           vol
-           ] (in:kr cntl-bus num-cntl-buses)
-          envelope (env-gen (envelope [0 0 env-d-l env-s-l 0]
-                                      [env-dly-t env-a-t env-d-t env-r-t]
-                                      [5 env-a-c env-d-c env-r-c]
-                                      3
-                                      )
-                            gate 1 0 1 action)
-          out-osc (* (sin-osc :freq (+ (* (in:kr base-freq-bus) freq-ratio)
-                                       (in:ar in-mod-bus)))
-                     envelope
-                     )
-          ]
-      (out:ar out-mod-bus
-              [
-               (* out-osc mod-lvl0)
-               (* out-osc mod-lvl1)
-               (* out-osc mod-lvl2)
-               (* out-osc mod-lvl3)
-               (* out-osc mod-lvl4)
-               (* out-osc mod-lvl5)
-               (* out-osc mod-lvl6)
-               (* out-osc mod-lvl7)
-               ])
-      (out:ar main-audio-bus (* out-osc (/ vol num-operators)))
-      )))
+(defsynth fm-oper
+  [
+   in-mod-bus 3
+   out-mod-bus 2
+   cntl-bus 7
+   action NO-ACTION
+   gate 0
+   ]
+  (let [
+        [mod-lvl0
+         mod-lvl1
+         mod-lvl2
+         mod-lvl3
+         mod-lvl4
+         mod-lvl5
+         mod-lvl6
+         mod-lvl7
+         env-d-l
+         env-s-l
+         env-dly-t
+         env-a-t
+         env-d-t
+         env-r-t
+         env-a-c
+         env-d-c
+         env-r-c
+         freq-ratio
+         vol
+         ] (in:kr cntl-bus num-cntl-buses)
+        envelope (env-gen (envelope [0 0 env-d-l env-s-l 0]
+                                    [env-dly-t env-a-t env-d-t env-r-t]
+                                    [5 env-a-c env-d-c env-r-c]
+                                    3
+                                    )
+                          gate 1 0 1 action)
+        out-osc (* (sin-osc :freq (+ (* (in:kr base-freq-bus) freq-ratio)
+                                     (in:ar in-mod-bus)))
+                   envelope
+                   )
+        ]
+    (out:ar out-mod-bus
+            [
+             (* out-osc mod-lvl0)
+             (* out-osc mod-lvl1)
+             (* out-osc mod-lvl2)
+             (* out-osc mod-lvl3)
+             (* out-osc mod-lvl4)
+             (* out-osc mod-lvl5)
+             (* out-osc mod-lvl6)
+             (* out-osc mod-lvl7)
+             ])
+    (out:ar main-audio-bus (* out-osc (/ vol num-operators)))
+    ))
 
 (def fm-voice
   (for [oper-id (range num-operators)]
@@ -363,11 +363,6 @@
   (ctl synth :env-a-t 3.0)
   )
 
-(defn print-cbuses
-  []
-  (for [cb cntl-buses] (pprint (control-bus-get cb)))
-  )
-
 (ctl (cntl-synths 5) :freq-ratio 3.6)
 (ctl (cntl-synths 0) :out-mod-lvl 0)
 (ctl (cntl-synths 0) :volume 0)
@@ -384,3 +379,40 @@
 (control-bus-get ((cntl-buses 1) 2))
 (control-bus-set! base-freq-bus 110)
 (stop)
+
+(defn reset-cbuses
+  []
+  (doseq [oper num-operators]
+    (let [parms (cntl-parms oper)]
+      (ctl (mod-lvl-synths oper)
+           :out-mod-lvl0 (or (:out-mod-lvl0 parms) 0)
+           :out-mod-lvl1 (or (:out-mod-lvl1 parms) 0)
+           :out-mod-lvl2 (or (:out-mod-lvl2 parms) 0)
+           :out-mod-lvl3 (or (:out-mod-lvl3 parms) 0)
+           :out-mod-lvl4 (or (:out-mod-lvl4 parms) 0)
+           :out-mod-lvl5 (or (:out-mod-lvl5 parms) 0)
+           :out-mod-lvl6 (or (:out-mod-lvl6 parms) 0)
+           :out-mod-lvl7 (or (:out-mod-lvl7 parms) 0)
+         )
+    (ctl (env-synths oper)
+         :env-d-l (:env-d-l parms)
+         :env-s-l (:env-s-l parms)
+         :env-dly-t (:env-dly-t parms)
+         :env-a-t (:env-a-t parms)
+         :env-d-t (:env-d-t parms)
+         :env-r-t (:env-r-t parms)
+         :env-a-c (:env-a-c parms)
+         :env-d-c (:env-d-c parms)
+         :env-r-c (:env-r-c parms)
+         )
+    (ctl (cntl-synths oper)
+         :freq-ratio (:freq-ratio parms)
+         :volume (:vol parms)
+         )
+      ))
+  )
+
+(defn print-cbuses
+  []
+  (for [cb cntl-buses] (pprint (control-bus-get cb)))
+  )
