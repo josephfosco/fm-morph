@@ -17,6 +17,7 @@
   (:require
    [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
+   [fm-morph.settings :as settings]
    )
   )
 
@@ -35,12 +36,9 @@
 
 (def fm-main-out (main-out-synth [:tail fm-later-g]))
 
-(def num-operators 8)
-(def num-cntl-buses 20)
-
-(defonce fm-mod-buses (vec (for [i (range num-operators)]
+(defonce fm-mod-buses (vec (for [i (range settings/num-operators)]
                               (audio-bus 1 (str "fm-mod-bus" i)))))
-(defonce feedback-buses (vec (for [i (range num-operators)]
+(defonce feedback-buses (vec (for [i (range settings/num-operators)]
                                 (audio-bus 1 (str "feedback-bus" i)))))
 
 (defsynth feedback-synth
@@ -55,7 +53,7 @@
 ;; individual operator would only be able to use the output of operators
 ;; defined after it was. This works because feedback-synth uses the
 ;; in-feedback ugen.
-(def feedback-synths (vec (for [i (range num-operators)]
+(def feedback-synths (vec (for [i (range settings/num-operators)]
                         (feedback-synth [:head fm-early-g]
                                         :inbus (fm-mod-buses i)
                                         :outbus (feedback-buses i))
@@ -67,8 +65,8 @@
 ;; Creates a vector of num-operators vectors with each internal vector
 ;; having num-cntl-buses control-buses
 (def cntl-buses
-  (vec (for [opr (range num-operators)]
-         (control-bus num-cntl-buses (str opr "-"))
+  (vec (for [opr (range settings/num-operators)]
+         (control-bus settings/num-cntl-buses (str opr "-"))
          ))
   )
 
@@ -145,106 +143,9 @@
     )
   )
 
-(def cntl-parms [
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0
-                  :freq-ratio 1     :vol 1
-                  }
-                 {:out-mod-lvl0 1 :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0
-                  :freq-ratio 2     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 1
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0
-                  :freq-ratio 3     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 1 :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0      :env-bias 0.0
-                  :freq-ratio 4     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 1
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0      :env-bias 0.0
-                  :freq-ratio 5     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 1 :out-mod-lvl5 0
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0      :env-bias 0.0
-                  :freq-ratio 6     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 1
-                  :out-mod-lvl6 0   :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0      :env-bias 0.0
-                  :freq-ratio 7     :vol 0
-                  }
-                 {:out-mod-lvl0 0   :out-mod-lvl1 0
-                  :out-mod-lvl2 0   :out-mod-lvl3 0
-                  :out-mod-lvl4 0   :out-mod-lvl5 0
-                  :out-mod-lvl6 1 :out-mod-lvl7 0
-                  :env-d-l 1        :env-s-l 0.5
-                  :env-dly-t 1      :env-a-t 0.1
-                  :env-d-t 0.3      :env-r-t 1.0
-                  :env-a-c 5.0      :env-d-c 5.0
-                  :env-r-c 5.0      :env-bias 0.0
-                  :freq-ratio 8     :vol 0
-                  }
-                ])
-
-; These indexes must match the order of the control-buses The specific -ndx(s)
-;; are used in the various control synths to set a base for their outputs
-(def base-mod-lvl-bus-ndx 0)
-(def base-env-bus-ndx num-operators)
-(def base-cntl-bus-ndx (+ base-env-bus-ndx 9))
-
 (def mod-lvl-synths
-  (vec (for [i (range num-operators)]
-         (let [parms (cntl-parms i)]
+  (vec (for [i (range settings/num-operators)]
+         (let [parms (settings/cntl-parms i)]
            (mod-lvls-synth [:head fm-early-g]
                        (cntl-buses i)
                        (or (:out-mod-lvl0 parms) 0)
@@ -260,9 +161,9 @@
   )
 
 (def cntl-synths
-  (vec (for [i (range num-operators)]
-         (let [parms (cntl-parms i)
-               cntl-bus-num (+ (:id (cntl-buses i)) base-cntl-bus-ndx)]
+  (vec (for [i (range settings/num-operators)]
+         (let [parms (settings/cntl-parms i)
+               cntl-bus-num (+ (:id (cntl-buses i)) settings/base-cntl-bus-ndx)]
            (cntl-synth [:head fm-early-g]
                        cntl-bus-num
                        (or (:env-bias parms) 0)
@@ -273,9 +174,9 @@
   )
 
 (def env-synths
-  (vec (for [i (range num-operators)]
-         (let [parms (cntl-parms i)
-               cntl-bus-num (+ (:id (cntl-buses i)) base-env-bus-ndx)]
+  (vec (for [i (range settings/num-operators)]
+         (let [parms (settings/cntl-parms i)
+               cntl-bus-num (+ (:id (cntl-buses i)) settings/base-env-bus-ndx)]
            (env-synth [:head fm-early-g]
                        cntl-bus-num
                        (:env-d-l parms)
@@ -320,7 +221,7 @@
          env-bias
          freq-ratio
          vol
-         ] (in:kr cntl-bus num-cntl-buses)
+         ] (in:kr cntl-bus settings/num-cntl-buses)
         envelope (env-gen (envelope (map #(+ %1 env-bias)
                                          [0 0 env-d-l env-s-l 0])
                                     [env-dly-t env-a-t env-d-t env-r-t]
@@ -344,11 +245,11 @@
              (* out-osc (* mod-lvl6 freq))
              (* out-osc (* mod-lvl7 freq))
              ])
-    (out:ar main-audio-bus (* out-osc (/ vol num-operators)))
+    (out:ar main-audio-bus (* out-osc (/ vol settings/num-operators)))
     ))
 
 (def fm-voice
-  (for [oper-id (range num-operators)]
+  (for [oper-id (range settings/num-operators)]
       (fm-oper [:tail fm-early-g]
                :in-mod-bus (feedback-buses oper-id)
                :out-mod-bus (fm-mod-buses 0)
@@ -366,51 +267,4 @@
 
 (doseq [synth env-synths]
   (ctl synth :env-r-t 6.0)
-  )
-
-(ctl (cntl-synths 5) :freq-ratio 3.6)
-(ctl (cntl-synths 0) :volume 0)
-(ctl (cntl-synths 1) :env-bias -0.50)
-(ctl (cntl-synths 7) :volume 0.2)
-(ctl (mod-lvl-synths 1) :out-mod-lvl0 0.00)
-(ctl (mod-lvl-synths 6) :out-mod-lvl1 400.0)
-(control-bus-set! base-freq-bus 220)
-(stop)
-
-(defn reset-cbuses
-  []
-  (dotimes [oper num-operators]
-    (let [parms (cntl-parms oper)]
-      (ctl (mod-lvl-synths oper)
-           :out-mod-lvl0 (or (:out-mod-lvl0 parms) 0)
-           :out-mod-lvl1 (or (:out-mod-lvl1 parms) 0)
-           :out-mod-lvl2 (or (:out-mod-lvl2 parms) 0)
-           :out-mod-lvl3 (or (:out-mod-lvl3 parms) 0)
-           :out-mod-lvl4 (or (:out-mod-lvl4 parms) 0)
-           :out-mod-lvl5 (or (:out-mod-lvl5 parms) 0)
-           :out-mod-lvl6 (or (:out-mod-lvl6 parms) 0)
-           :out-mod-lvl7 (or (:out-mod-lvl7 parms) 0)
-         )
-    (ctl (env-synths oper)
-         :env-d-l (:env-d-l parms)
-         :env-s-l (:env-s-l parms)
-         :env-dly-t (:env-dly-t parms)
-         :env-a-t (:env-a-t parms)
-         :env-d-t (:env-d-t parms)
-         :env-r-t (:env-r-t parms)
-         :env-a-c (:env-a-c parms)
-         :env-d-c (:env-d-c parms)
-         :env-r-c (:env-r-c parms)
-         )
-    (ctl (cntl-synths oper)
-         :env-bias (or (:env-bias parms) 0)
-         :freq-ratio (:freq-ratio parms)
-         :volume (:vol parms)
-         )
-      ))
-  )
-
-(defn print-cbuses
-  []
-  (doseq [cb cntl-buses] (println (control-bus-get cb)))
   )
