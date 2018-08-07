@@ -24,7 +24,7 @@
 (def base-env-bus-ndx num-operators)
 (def base-cntl-bus-ndx (+ base-env-bus-ndx 9))
 
-(def patch-directory "./patches/test.clj")
+(def patch-directory "./patches/")
 
 (def cntl-parms [
                  {:out-mod-lvl0 0   :out-mod-lvl1 0

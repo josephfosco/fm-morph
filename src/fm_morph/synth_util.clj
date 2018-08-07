@@ -15,7 +15,7 @@
 
 (ns fm-morph.synth-util
   (:require
-   [clojure.java.io :refer [writer]]
+   [clojure.java.io :refer [reader writer]]
    [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
    [fm-morph.settings :as settings]
@@ -92,9 +92,26 @@
   )
 
 (defn save-synth
-  []
+  [filename]
   (with-open
-    [w (writer settings/patch-directory)]
+    [w (writer (str settings/patch-directory
+                     "/"
+                     filename
+                     ".clj"))
+     ]
     (binding [*out* w] (pprint (get-synth-values)))
+    )
+  )
+
+(defn load-synth
+  [filename]
+  (with-open
+    [r (java.io.PushbackReader.
+        (reader (str settings/patch-directory
+                     "/"
+                     filename
+                     ".clj")))
+     ]
+    (binding [*read-eval* false] (read r))
     )
   )
