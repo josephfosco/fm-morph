@@ -17,16 +17,16 @@
   (:require
    [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
-   (fm-morph.synth :refer :all :as sy)
+   [fm-morph.synth :as sy]
    )
   )
 
 (def sy/fm-voice
-  (for [oper-id (range num-operators)]
-      (fm-oper [:tail fm-early-g]
-               :in-mod-bus (feedback-buses oper-id)
-               :out-mod-bus (fm-mod-buses 0)
-               :cntl-bus (cntl-buses oper-id)
+  (for [oper-id (range settings/num-operators)]
+      (fm-oper [:tail sy/fm-early-g]
+               :in-mod-bus (sy/feedback-buses oper-id)
+               :out-mod-bus (sy/fm-mod-buses 0) ?? 0 or oper-id ??
+               :cntl-bus (sy/cntl-buses oper-id)
                )
     ))
 
@@ -52,7 +52,7 @@
 (ctl (env-synths 7) :env-a-t 0.01)
 (ctl (env-synths 7) :env-d-c -5.0)
 
-(ctl (mod-lvl-synths 2) :out-mod-lvl1 2.00)
-(ctl (mod-lvl-synths 6) :out-mod-lvl1 400.0)
-(control-bus-set! base-freq-bus 220)
+(ctl (sy/mod-lvl-synths 2) :out-mod-lvl1 2.00)
+(ctl (sy/mod-lvl-synths 6) :out-mod-lvl1 400.0)
+(control-bus-set! sy/base-freq-bus 220)
 (stop)

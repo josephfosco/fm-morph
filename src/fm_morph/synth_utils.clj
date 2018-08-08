@@ -13,7 +13,7 @@
 ;    You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(ns fm-morph.synth-util
+(ns fm-morph.synth-utils
   (:require
    [clojure.java.io :refer [reader writer]]
    [clojure.pprint :refer [pprint]]
@@ -24,9 +24,10 @@
   )
 
 (defn reset-cbuses
-  []
+  [synth-parms]
   (dotimes [oper settings/num-operators]
-    (let [parms (settings/cntl-parms oper)]
+    (let [parms (synth-parms oper)]
+      (println parms)
       (ctl (mod-lvl-synths oper)
            :out-mod-lvl0 (or (:out-mod-lvl0 parms) 0)
            :out-mod-lvl1 (or (:out-mod-lvl1 parms) 0)
@@ -38,20 +39,20 @@
            :out-mod-lvl7 (or (:out-mod-lvl7 parms) 0)
          )
     (ctl (env-synths oper)
-         :env-d-l (:env-d-l parms)
-         :env-s-l (:env-s-l parms)
-         :env-dly-t (:env-dly-t parms)
-         :env-a-t (:env-a-t parms)
-         :env-d-t (:env-d-t parms)
-         :env-r-t (:env-r-t parms)
-         :env-a-c (:env-a-c parms)
-         :env-d-c (:env-d-c parms)
-         :env-r-c (:env-r-c parms)
+         :env-d-l (or (:env-d-l parms) 1.0)
+         :env-s-l (or (:env-s-l parms) 0.5)
+         :env-dly-t (or (:env-dly-t parms) 0.0)
+         :env-a-t (or (:env-a-t parms) 0.3)
+         :env-d-t (or (:env-d-t parms) 0.3)
+         :env-r-t (or (:env-r-t parms) 0.3)
+         :env-a-c (or (:env-a-c parms) 5.0)
+         :env-d-c (or (:env-d-c parms) 5.0)
+         :env-r-c (or (:env-r-c parms) 5.0)
          )
     (ctl (cntl-synths oper)
-         :env-bias (or (:env-bias parms) 0)
-         :freq-ratio (:freq-ratio parms)
-         :volume (:vol parms)
+         :env-bias (or (:env-bias parms) 0.0)
+         :freq-ratio (or (:freq-ratio parms) 1.0)
+         :volume (or (:vol parms) 0.0)
          )
       ))
   )
@@ -103,7 +104,7 @@
     )
   )
 
-(defn load-synth
+(defn read-synth
   [filename]
   (with-open
     [r (java.io.PushbackReader.
@@ -114,4 +115,9 @@
      ]
     (binding [*read-eval* false] (read r))
     )
+  )
+
+(defn load-synth
+  [filename]
+  (reset-cbuses (read-synth filename))
   )

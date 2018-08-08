@@ -15,7 +15,6 @@
 
 (ns fm-morph.synth
   (:require
-   [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
    [fm-morph.settings :as settings]
    )
@@ -143,9 +142,12 @@
     )
   )
 
+;; create empty maps for initial synth-parms
+(def synth-parms (vec (for [i (range settings/num-operators)] {})))
+
 (def mod-lvl-synths
   (vec (for [i (range settings/num-operators)]
-         (let [parms (settings/cntl-parms i)]
+         (let [parms (synth-parms i)]
            (mod-lvls-synth [:head fm-early-g]
                        (cntl-buses i)
                        (or (:out-mod-lvl0 parms) 0)
@@ -162,32 +164,32 @@
 
 (def cntl-synths
   (vec (for [i (range settings/num-operators)]
-         (let [parms (settings/cntl-parms i)
+         (let [parms (synth-parms i)
                cntl-bus-num (+ (:id (cntl-buses i)) settings/base-cntl-bus-ndx)]
            (cntl-synth [:head fm-early-g]
                        cntl-bus-num
-                       (or (:env-bias parms) 0)
-                       (:freq-ratio parms)
-                       (:vol parms)
+                       (or (:env-bias parms) 0.0)
+                       (or (:freq-ratio parms) 1.0)
+                       (or (:vol parms) 0.0)
                        ))
          ))
   )
 
 (def env-synths
   (vec (for [i (range settings/num-operators)]
-         (let [parms (settings/cntl-parms i)
+         (let [parms (synth-parms i)
                cntl-bus-num (+ (:id (cntl-buses i)) settings/base-env-bus-ndx)]
            (env-synth [:head fm-early-g]
                        cntl-bus-num
-                       (:env-d-l parms)
-                       (:env-s-l parms)
-                       (:env-dly-t parms)
-                       (:env-a-t parms)
-                       (:env-d-t parms)
-                       (:env-r-t parms)
-                       (:env-a-c parms)
-                       (:env-d-c parms)
-                       (:env-r-c parms)
+                       (or (:env-d-l parms) 1.0)
+                       (or (:env-s-l parms) 0.5)
+                       (or (:env-dly-t parms) 0.0)
+                       (or (:env-a-t parms) 0.3)
+                       (or (:env-d-t parms) 0.3)
+                       (or (:env-r-t parms) 0.3)
+                       (or (:env-a-c parms) 5.0)
+                       (or (:env-d-c parms) 5.0)
+                       (or (:env-r-c parms) 5.0)
                        ))
          ))
   )
