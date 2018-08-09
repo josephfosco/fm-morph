@@ -17,15 +17,16 @@
   (:require
    [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
+   [fm-morph.settings :as settings]
    [fm-morph.synth :as sy]
    )
   )
 
-(def sy/fm-voice
+(def fm-voice
   (for [oper-id (range settings/num-operators)]
-      (fm-oper [:tail sy/fm-early-g]
+      (sy/fm-oper [:tail sy/fm-early-g]
                :in-mod-bus (sy/feedback-buses oper-id)
-               :out-mod-bus (sy/fm-mod-buses 0) ?? 0 or oper-id ??
+               :out-mod-bus (sy/fm-mod-buses 0)
                :cntl-bus (sy/cntl-buses oper-id)
                )
     ))

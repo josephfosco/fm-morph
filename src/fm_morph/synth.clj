@@ -249,24 +249,3 @@
              ])
     (out:ar main-audio-bus (* out-osc (/ vol settings/num-operators)))
     ))
-
-(def fm-voice
-  (for [oper-id (range settings/num-operators)]
-      (fm-oper [:tail fm-early-g]
-               :in-mod-bus (feedback-buses oper-id)
-               :out-mod-bus (fm-mod-buses 0)
-               :cntl-bus (cntl-buses oper-id)
-               )
-    ))
-
-(doseq [oper fm-voice]
-  (ctl oper :gate 1 :action FREE)
-  )
-
-(doseq [oper fm-voice]
-  (ctl oper :gate 0)
-  )
-
-(doseq [synth env-synths]
-  (ctl synth :env-r-t 6.0)
-  )
