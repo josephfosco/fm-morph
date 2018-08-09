@@ -231,7 +231,7 @@
                                     3
                                     )
                           gate 1 0 1 action)
-        freq (* (in:kr base-freq-bus) (/ freq-ratio 2))
+        freq (* (in:kr base-freq-bus) freq-ratio)
         out-osc (* (sin-osc :freq (+ freq (in:ar in-mod-bus)))
                    envelope
                    )

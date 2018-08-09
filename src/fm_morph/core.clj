@@ -17,5 +17,5 @@
   (:gen-class)
   (:require
    [overtone.live :refer :all]
-   [fm-morph.synth-utils]
+   [fm-morph.synth-utils :refer :all]
    ))
