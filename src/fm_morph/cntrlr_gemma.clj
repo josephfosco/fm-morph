@@ -1,4 +1,4 @@
-;    Copyright (C) 2018  Joseph Fosco. All Rights Reserved
+;    Copyright (C) 2016  Joseph Fosco. All Rights Reserved
 ;
 ;    This program is free software: you can redistribute it and/or modify
 ;    it under the terms of the GNU General Public License as published by
@@ -13,17 +13,33 @@
 ;    You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(defproject fm-morph "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-  :license {:name "GNU GENERAL PUBLIC LICENSE version 3"
-            :url "http://www.gnu.org/licenses/"}
-  :dependencies [[org.clojure/clojure "1.9.0"]
-                 [overtone "0.10.3"]
-                 [clj-serial "2.0.4-SNAPSHOT"]
-                 [serial-port "1.1.0"]
-                 ]
-  :jvm-opts ^:replace [] ;; turns off JVM arg TieredStopAtLevel=1
-  :main ^:skip-aot fm-morph.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+(ns fm-morph.cntrlr-gemma
+  (:require
+   [serial.core :refer :all]
+   [serial.util :refer :all]
+;;   [serial-port :refer :all]
+   )
+  )
+
+(defn cntrlr-ports []
+  (list-ports))
+
+(defn process-port-input
+  [val]
+  (when (= val \0)
+    (println "RESET"))
+  (println val)
+  )
+
+(defn cntrlr-listen
+  [&{:keys [port] :or {port "ttyACM0"}}]
+  (let [gemma-port (open port)]
+    (listen gemma-port #(process-port-input (char (int (.read %)))))
+    gemma-port
+    )
+  )
+
+(defn cntrlr-close
+ [port]
+ (close! port)
+  )
