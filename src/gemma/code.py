@@ -9,5 +9,6 @@ while True:
       led.value = not led.value
       cnt = (cnt + 1) % 10
       # print(cnt, end="")
-      sys.stdout.write("{}".format(cnt))
+      # always send 3 chars with leading zeros
+      sys.stdout.write("{:03}".format(cnt))
       time.sleep(2.0)

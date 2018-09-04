@@ -1,4 +1,4 @@
-;    Copyright (C) 2016  Joseph Fosco. All Rights Reserved
+;    Copyright (C) 2018  Joseph Fosco. All Rights Reserved
 ;
 ;    This program is free software: you can redistribute it and/or modify
 ;    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,12 @@
    [serial.util :refer :all]
 ;;   [serial-port :refer :all]
    )
+  (:import (java.io InputStream))
+  )
+
+(defn int-from-string
+  [int-string]
+  (Integer. (re-find #"\d+" int-string))
   )
 
 (defn cntrlr-ports []
@@ -26,15 +32,27 @@
 
 (defn process-port-input
   [val]
-  (when (= val \0)
-    (println "RESET"))
-  (println val)
+  (let [int-val (int-from-string val)]
+       (when (= int-val 0)
+         (println "RESET"))
+       (println int-val))
   )
 
 (defn cntrlr-listen
   [&{:keys [port] :or {port "ttyACM0"}}]
-  (let [gemma-port (open port)]
-    (listen gemma-port #(process-port-input (char (int (.read %)))))
+  (let [num-bytes 3
+        gemma-port (open port)]
+    ;; (listen gemma-port #(process-port-input (.read %)))
+    (listen gemma-port (fn [^InputStream in-stream]
+                         (if (>= (.available in-stream) num-bytes)
+                           (process-port-input
+                            (apply str
+                                   (doall (repeatedly
+                                           num-bytes
+                                           #(char (.read in-stream))))))
+                           )
+                         )
+            )
     gemma-port
     )
   )
