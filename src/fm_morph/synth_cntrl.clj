@@ -13,9 +13,8 @@
 ;    You should have received a copy of the GNU General Public License
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-(ns fm-morph.synth-play
+(ns fm-morph.synth-cntrl
   (:require
-   [clojure.pprint :refer [pprint]]
    [overtone.live :refer :all]
    [fm-morph.settings :as settings]
    [fm-morph.synth :as sy]
@@ -31,33 +30,40 @@
                )
     ))
 
-(doseq [oper fm-voice]
-  (ctl oper :gate 1 :action FREE)
-  )
+(defn trigger-synth
+  [trigger-val]
+  (println "triggering synth val:" trigger-val)
+  (doseq [oper fm-voice]
+    (ctl oper :gate trigger-val)
+    ))
 
-(doseq [oper fm-voice]
-  (ctl oper :gate 1)
-  )
+;; (doseq [oper fm-voice]
+;;   (ctl oper :gate 1 :action FREE)
+;;   )
 
-(doseq [oper fm-voice]
-  (ctl oper :gate 0)
-  )
+;; (doseq [oper fm-voice]
+;;   (ctl oper :gate 1)
+;;   )
 
-(doseq [synth sy/env-synths]
-  (ctl synth :env-r-t 6.0)
-  )
+;; (doseq [oper fm-voice]
+;;   (ctl oper :gate 0)
+;;   )
 
-(ctl (cntl-synths 5) :freq-ratio 3.6)
-(ctl (cntl-synths 7) :volume 1)
-(ctl (cntl-synths 1) :env-bias -0.50)
+;; (doseq [synth sy/env-synths]
+;;   (ctl synth :env-r-t 6.0)
+;;   )
 
-(ctl (env-synths 7) :env-dly-t 0.5)
-(ctl (env-synths 7) :env-d-l 0.4)
-(ctl (env-synths 7) :env-d-t 1.8)
-(ctl (env-synths 7) :env-a-t 0.01)
-(ctl (env-synths 7) :env-d-c -5.0)
+;; (ctl (cntl-synths 5) :freq-ratio 3.6)
+;; (ctl (cntl-synths 7) :volume 1)
+;; (ctl (cntl-synths 1) :env-bias -0.50)
 
-(ctl (sy/mod-lvl-synths 2) :out-mod-lvl1 2.00)
-(ctl (sy/mod-lvl-synths 6) :out-mod-lvl1 400.0)
-(control-bus-set! sy/base-freq-bus 220)
-(stop)
+;; (ctl (env-synths 7) :env-dly-t 0.5)
+;; (ctl (env-synths 7) :env-d-l 0.4)
+;; (ctl (env-synths 7) :env-d-t 1.8)
+;; (ctl (env-synths 7) :env-a-t 0.01)
+;; (ctl (env-synths 7) :env-d-c -5.0)
+
+;; (ctl (sy/mod-lvl-synths 2) :out-mod-lvl1 2.00)
+;; (ctl (sy/mod-lvl-synths 6) :out-mod-lvl1 400.0)
+;; (control-bus-set! sy/base-freq-bus 220)
+;; (stop)

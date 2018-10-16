@@ -17,10 +17,13 @@
   (:require
    [serial.core :refer :all]
    [serial.util :refer :all]
-;;   [serial-port :refer :all]
+   ;; [serial-port :refer :all]
+   [fm-morph.cntrlr-synth-interface :refer [cntrlr-synth-interface]]
    )
   (:import (java.io InputStream))
   )
+
+(def cs-intrf (cntrlr-synth-interface))
 
 (defn int-from-string
   [int-string]
@@ -33,8 +36,11 @@
 (defn process-port-input
   [val]
   (let [int-val (int-from-string val)]
-       (when (= int-val 0)
-         (println "RESET"))
+    (when (= int-val 0)
+      (do
+        (println "RESET")
+        ((cs-intrf :process-cntrlr-input) int-val)
+        ))
        (println int-val))
   )
 
