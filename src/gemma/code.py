@@ -82,7 +82,8 @@ class BtnCntrlr:
             val_diff = round(new_pot_val - self.last_pot_val)
             if abs(val_diff) == 1:
                 val_diff = 0
-            self.last_pot_val = new_pot_val
+            else:
+                self.last_pot_val = new_pot_val
             return val_diff
         else:
             return 0
@@ -110,7 +111,7 @@ def getVoltage(pin):
 def send_data(val1, val2, val3):
     # sends one "data packet"
     # a data packet is always 6 bytes
-    # GENERALLY the first 2 bytes are the bank (0 -4)
+    # GENERALLY the first byte is the bank (0 - 4)
     # the second byte is the button (0 - 9)
     # the third thru sixth bytes are the difference in
     #   pot value (aprox -100 to 100)

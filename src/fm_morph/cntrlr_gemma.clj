@@ -25,39 +25,44 @@
 
 (def cs-intrf (cntrlr-synth-interface))
 
-(defn int-from-string
-  [int-string]
-  (Integer. (re-find #"\d+" int-string))
-  )
-
 (defn cntrlr-ports []
   (list-ports))
 
+(def pot-total (atom 0))
+
+
 (defn process-port-input
-  [val]
-  (let [int-val (int-from-string val)]
-    (when (= int-val 0)
-      (do
-        (println "RESET")
-        ((cs-intrf :process-cntrlr-input) int-val)
-        ))
-       (println int-val))
+  [msg]
+  (println "msg: " msg)
+  (let [bank (Integer. (subs msg 0 1))
+        btn (Integer. (subs msg 1 2))
+        pot-val (Integer. (subs msg 2))
+        ]
+    (reset! pot-total (+ @pot-total pot-val))
+    (println "bank: " bank)
+    (println "btn: " btn)
+    (println "pot-val: " pot-val)
+    (println "pot-total:" @pot-total)
+    (println " ")
+    )
   )
 
 (defn cntrlr-listen
   [&{:keys [port] :or {port "ttyACM0"}}]
-  (let [num-bytes 3
+  (let [msg-size 6
         gemma-port (open port)]
     ;; (listen gemma-port #(process-port-input (.read %)))
-    (listen gemma-port (fn [^InputStream in-stream]
-                         (if (>= (.available in-stream) num-bytes)
-                           (process-port-input
-                            (apply str
-                                   (doall (repeatedly
-                                           num-bytes
-                                           #(char (.read in-stream))))))
-                           )
-                         )
+    (listen! gemma-port (fn [^InputStream in-stream]
+                          (println "in avail: " (.available in-stream))
+                          (while (< (.available in-stream) msg-size)
+                            nil
+                            )
+                          (process-port-input
+                           (apply str
+                                  (doall (repeatedly
+                                          msg-size
+                                          #(char (.read in-stream))))))
+                          )
             )
     gemma-port
     )
