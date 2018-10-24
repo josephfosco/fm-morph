@@ -59,7 +59,7 @@
                         )))
 
 (defonce base-freq-bus (control-bus 1 "base-freq-bus"))
-(control-bus-set! base-freq-bus 110)
+(control-bus-set! base-freq-bus 440)
 
 ;; Creates a vector of num-operators vectors with each internal vector
 ;; having num-cntl-buses control-buses

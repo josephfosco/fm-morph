@@ -76,9 +76,9 @@ class BtnCntrlr:
         self.bank_btn_released = True
 
     def check_pot(self, new_pot_vltg):
-        # returns an int difference of new - last between 0 and 100
+        # returns an int difference of (new - last) between 0 and 50
         if self.pot_set:
-            new_pot_val = round((new_pot_vltg - self.base_pot_vltg) * 30.303030)
+            new_pot_val = round((new_pot_vltg - self.base_pot_vltg) * 15.151515)
             val_diff = round(new_pot_val - self.last_pot_val)
             if abs(val_diff) == 1:
                 val_diff = 0

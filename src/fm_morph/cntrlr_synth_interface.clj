@@ -17,6 +17,16 @@
   (:require [fm-morph.synth-cntrl :refer [trigger-synth]])
   )
 
+(defn process-cntrlr-input
+  [bank btn val]
+  (cond
+    (= 9 bank btn) (trigger-synth val)
+    :else (println "ERROR: Invalid controller values - bank:" bank, "btn:" btn, "val:" val)
+    )
+  )
+
+
+
 (defn cntrlr-synth-interface
   []
   (let [

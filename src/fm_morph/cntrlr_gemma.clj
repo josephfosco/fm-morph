@@ -18,32 +18,28 @@
    [serial.core :refer :all]
    [serial.util :refer :all]
    ;; [serial-port :refer :all]
-   [fm-morph.cntrlr-synth-interface :refer [cntrlr-synth-interface]]
+   [fm-morph.cntrlr-synth-interface :refer [cntrlr-synth-interface
+                                            process-cntrlr-input]]
    )
   (:import (java.io InputStream))
   )
 
-(def cs-intrf (cntrlr-synth-interface))
+;; (def cs-intrf (cntrlr-synth-interface))
 
 (defn cntrlr-ports []
   (list-ports))
 
-(def pot-total (atom 0))
-
-
 (defn process-port-input
   [msg]
-  (println "msg: " msg)
   (let [bank (Integer. (subs msg 0 1))
         btn (Integer. (subs msg 1 2))
-        pot-val (Integer. (subs msg 2))
+        val (Integer. (subs msg 2))
         ]
-    (reset! pot-total (+ @pot-total pot-val))
     (println "bank: " bank)
     (println "btn: " btn)
-    (println "pot-val: " pot-val)
-    (println "pot-total:" @pot-total)
+    (println "val: " val)
     (println " ")
+    (process-cntrlr-input bank btn val)
     )
   )
 
@@ -51,9 +47,8 @@
   [&{:keys [port] :or {port "ttyACM0"}}]
   (let [msg-size 6
         gemma-port (open port)]
-    ;; (listen gemma-port #(process-port-input (.read %)))
+    ;; (listen! gemma-port #(process-port-input (.read %)))
     (listen! gemma-port (fn [^InputStream in-stream]
-                          (println "in avail: " (.available in-stream))
                           (while (< (.available in-stream) msg-size)
                             nil
                             )
@@ -63,7 +58,7 @@
                                           msg-size
                                           #(char (.read in-stream))))))
                           )
-            )
+             )
     gemma-port
     )
   )
