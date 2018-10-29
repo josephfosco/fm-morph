@@ -217,7 +217,7 @@
          env-a-t
          env-d-t
          env-r-t
-         env-a-c
+         env-a-c ;; envelope segment curves
          env-d-c
          env-r-c
          env-bias

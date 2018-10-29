@@ -17,5 +17,30 @@
   (:gen-class)
   (:require
    [overtone.live :refer :all]
+   [fm-morph.cntrlr-gemma :refer [cntrlr-close cntrlr-listen]]
+   [fm-morph.synth-cntrl :refer [set-cntl-bus-vals]]
    [fm-morph.synth-utils :refer :all]
    ))
+
+(def cntrlr-port (atom nil))
+
+(defn open-cntrlr
+  []
+  (if (not @cntrlr-port)
+    (do
+      (reset! cntrlr-port (cntrlr-listen))
+      (set-cntl-bus-vals)
+      )
+    (println "ERROR: Controller port already opened")
+    )
+  )
+
+(defn close-cntrlr
+  []
+  (if @cntrlr-port
+    (do
+      (cntrlr-close @cntrlr-port)
+      (reset! cntrlr-port nil))
+    (println "ERROR: Comtroller port not open")
+    )
+  )

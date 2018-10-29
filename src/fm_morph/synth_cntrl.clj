@@ -21,6 +21,18 @@
    )
   )
 
+(def cntl-bus-vals (vec (for [o (range settings/num-operators)]
+                          (vec (for [b (range settings/num-cntl-buses)] (atom 0))))))
+
+(defn set-cntl-bus-vals
+  []
+  (for [oper (range settings/num-operators)]
+    (for [cbus (range settings/num-cntl-buses)]
+      (reset! ((cntl-bus-vals oper) cbus)
+              (control-bus-get (+ (:id (sy/cntl-buses oper))) cbus)
+              )))
+  )
+
 (def fm-voice
   (for [oper-id (range settings/num-operators)]
       (sy/fm-oper [:tail sy/fm-early-g]
@@ -35,7 +47,24 @@
   (println "triggering synth val:" trigger-val)
   (doseq [oper fm-voice]
     (ctl oper :gate trigger-val)
-    ))
+    )
+  )
+
+(defn change-mod-lvl
+  [oper mod-to-oper lvl-change]
+  (println "mod-lvl-change")
+  (let [cntl-bus-val ((cntl-bus-vals oper)
+                      (+ mod-to-oper settings/base-mod-lvl-bus-ndx))
+        new-mod-lvl (reset!
+                     cntl-bus-val
+                     (+ lvl-change @cntl-bus-val))
+        ]
+    (ctl (sy/mod-lvl-synths oper)
+         (keyword (str "out-mod-lvl" mod-to-oper))
+         new-mod-lvl)
+    )
+  )
+
 
 ;; (doseq [oper fm-voice]
 ;;   (ctl oper :gate 1 :action FREE)

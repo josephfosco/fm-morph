@@ -14,17 +14,18 @@
 ;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (ns fm-morph.cntrlr-synth-interface
-  (:require [fm-morph.synth-cntrl :refer [trigger-synth]])
+  (:require [fm-morph.synth-cntrl :refer [change-mod-lvl
+                                          trigger-synth]])
   )
 
 (defn process-cntrlr-input
   [bank btn val]
   (cond
+    (and (< bank 4) (< btn 4)) (change-mod-lvl bank btn val)
     (= 9 bank btn) (trigger-synth val)
     :else (println "ERROR: Invalid controller values - bank:" bank, "btn:" btn, "val:" val)
     )
   )
-
 
 
 (defn cntrlr-synth-interface

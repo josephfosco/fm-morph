@@ -8,6 +8,8 @@ Download from github.com
 
 ## Usage
 
+Load fm-morph/synth-play to control fm synth from the repl using the computer keyboard
+
 ## Options
 
 None
