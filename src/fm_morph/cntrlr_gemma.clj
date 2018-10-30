@@ -35,10 +35,10 @@
         btn (Integer. (subs msg 1 2))
         val (Integer. (subs msg 2))
         ]
+    (println " ")
     (println "bank: " bank)
     (println "btn: " btn)
     (println "val: " val)
-    (println " ")
     (process-cntrlr-input bank btn val)
     )
   )

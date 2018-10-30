@@ -50,20 +50,26 @@
     )
   )
 
-(defn change-mod-lvl
-  [oper mod-to-oper lvl-change]
-  (println "mod-lvl-change")
-  (let [cntl-bus-val ((cntl-bus-vals oper)
-                      (+ mod-to-oper settings/base-mod-lvl-bus-ndx))
-        new-mod-lvl (reset!
-                     cntl-bus-val
-                     (+ lvl-change @cntl-bus-val))
-        ]
-    (ctl (sy/mod-lvl-synths oper)
-         (keyword (str "out-mod-lvl" mod-to-oper))
-         new-mod-lvl)
-    )
+(defn scale-lvl
+  "Scales raw values from -50 to 50 to -5 to 5"
+  [val]
+  (/ val 10)
   )
+
+(defn change-mod-lvl
+     [oper mod-to-oper lvl-change]
+     (let [cntl-bus-val ((cntl-bus-vals oper)
+                         (+ mod-to-oper settings/base-mod-lvl-bus-ndx))
+           new-mod-lvl (reset!
+                        cntl-bus-val
+                        (+ (scale-lvl lvl-change) @cntl-bus-val))
+           ]
+       (println (str "out-mod-lvl" mod-to-oper) ": " new-mod-lvl)
+       (ctl (sy/mod-lvl-synths oper)
+            (keyword (str "out-mod-lvl" mod-to-oper))
+            new-mod-lvl)
+       )
+     )
 
 
 ;; (doseq [oper fm-voice]
