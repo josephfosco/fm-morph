@@ -25,7 +25,7 @@
   :env-r-c 5.0
   :freq-ratio 1     :vol 1
   }
- {:out-mod-lvl0 1   :out-mod-lvl1 0
+ {:out-mod-lvl0 0   :out-mod-lvl1 0
   :out-mod-lvl2 0   :out-mod-lvl3 0
   :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
@@ -36,7 +36,7 @@
   :env-r-c 5.0
   :freq-ratio 2     :vol 0
   }
- {:out-mod-lvl0 0   :out-mod-lvl1 1
+ {:out-mod-lvl0 0   :out-mod-lvl1 0
   :out-mod-lvl2 0   :out-mod-lvl3 0
   :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
@@ -48,7 +48,7 @@
   :freq-ratio 3     :vol 0
   }
  {:out-mod-lvl0 0   :out-mod-lvl1 0
-  :out-mod-lvl2 1   :out-mod-lvl3 0
+  :out-mod-lvl2 0   :out-mod-lvl3 0
   :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
   :env-d-l 1        :env-s-l 0.5
@@ -59,7 +59,7 @@
   :freq-ratio 4     :vol 0
   }
  {:out-mod-lvl0 0   :out-mod-lvl1 0
-  :out-mod-lvl2 0   :out-mod-lvl3 1
+  :out-mod-lvl2 0   :out-mod-lvl3 0
   :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
   :env-d-l 1        :env-s-l 0.5
@@ -71,7 +71,7 @@
   }
  {:out-mod-lvl0 0   :out-mod-lvl1 0
   :out-mod-lvl2 0   :out-mod-lvl3 0
-  :out-mod-lvl4 1   :out-mod-lvl5 0
+  :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
   :env-d-l 1        :env-s-l 0.5
   :env-dly-t 0      :env-a-t 0.1
@@ -82,7 +82,7 @@
   }
  {:out-mod-lvl0 0   :out-mod-lvl1 0
   :out-mod-lvl2 0   :out-mod-lvl3 0
-  :out-mod-lvl4 0   :out-mod-lvl5 1
+  :out-mod-lvl4 0   :out-mod-lvl5 0
   :out-mod-lvl6 0   :out-mod-lvl7 0
   :env-d-l 1        :env-s-l 0.5
   :env-dly-t 0      :env-a-t 0.1
@@ -94,7 +94,7 @@
  {:out-mod-lvl0 0   :out-mod-lvl1 0
   :out-mod-lvl2 0   :out-mod-lvl3 0
   :out-mod-lvl4 0   :out-mod-lvl5 0
-  :out-mod-lvl6 1   :out-mod-lvl7 0
+  :out-mod-lvl6 0   :out-mod-lvl7 0
   :env-d-l 1        :env-s-l 0.5
   :env-dly-t 0      :env-a-t 0.1
   :env-d-t 0.3      :env-r-t 1.0

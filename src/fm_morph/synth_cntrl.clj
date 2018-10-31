@@ -50,10 +50,16 @@
     )
   )
 
-(defn scale-lvl
+(defn scale-mod-lvl
   "Scales raw values from -50 to 50 to -5 to 5"
   [val]
   (/ val 10)
+  )
+
+(defn scale-vol-lvl
+  "Scales raw values from -50 to 50 to -0.5 to 0.5"
+  [val]
+  (/ val 100)
   )
 
 (defn change-mod-lvl
@@ -62,7 +68,7 @@
                          (+ mod-to-oper settings/base-mod-lvl-bus-ndx))
            new-mod-lvl (reset!
                         cntl-bus-val
-                        (+ (scale-lvl lvl-change) @cntl-bus-val))
+                        (+ (scale-mod-lvl lvl-change) @cntl-bus-val))
            ]
        (println (str "out-mod-lvl" mod-to-oper) ": " new-mod-lvl)
        (ctl (sy/mod-lvl-synths oper)
@@ -70,6 +76,29 @@
             new-mod-lvl)
        )
      )
+
+(defn change-vol-lvl
+     [oper lvl-change]
+     (let [cntl-bus-val ((cntl-bus-vals oper)
+                         (+ settings/cntrl-vol-ndx settings/base-cntrl-bus-ndx))
+           new-mod-lvl (reset!
+                        cntl-bus-val
+                        (+ (scale-vol-lvl lvl-change) @cntl-bus-val))
+           ]
+       (println (str "out-vol-lvl") ": " new-mod-lvl)
+       (ctl (sy/cntl-synths oper) :volume new-mod-lvl)
+       )
+     )
+
+(defn process-cntrlr-input
+  [bank btn val]
+  (cond
+    (and (< bank 4) (< btn 4)) (change-mod-lvl bank btn val)
+    (and (< bank 4) (= btn 4)) (change-vol-lvl bank val)
+    (= 9 bank btn) (trigger-synth val)
+    :else (println "ERROR: Invalid controller values - bank:" bank, "btn:" btn, "val:" val)
+    )
+  )
 
 
 ;; (doseq [oper fm-voice]

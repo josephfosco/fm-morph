@@ -18,13 +18,10 @@
    [serial.core :refer :all]
    [serial.util :refer :all]
    ;; [serial-port :refer :all]
-   [fm-morph.cntrlr-synth-interface :refer [cntrlr-synth-interface
-                                            process-cntrlr-input]]
+   [fm-morph.synth-cntrl :refer [process-cntrlr-input]]
    )
   (:import (java.io InputStream))
   )
-
-;; (def cs-intrf (cntrlr-synth-interface))
 
 (defn cntrlr-ports []
   (list-ports))

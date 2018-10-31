@@ -22,6 +22,8 @@
 ;; are used in the various control synths to set a base for their outputs
 (def base-mod-lvl-bus-ndx 0)
 (def base-env-bus-ndx num-operators)
-(def base-cntl-bus-ndx (+ base-env-bus-ndx 9))
+(def base-cntrl-bus-ndx (+ base-env-bus-ndx 9))
+
+(def cntrl-vol-ndx 2)
 
 (def patch-directory "./patches/")

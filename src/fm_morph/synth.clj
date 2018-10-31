@@ -165,7 +165,8 @@
 (def cntl-synths
   (vec (for [i (range settings/num-operators)]
          (let [parms (synth-parms i)
-               cntl-bus-num (+ (:id (cntl-buses i)) settings/base-cntl-bus-ndx)]
+               cntl-bus-num (+ (:id (cntl-buses i))
+                               settings/base-cntrl-bus-ndx)]
            (cntl-synth [:head fm-early-g]
                        cntl-bus-num
                        (or (:env-bias parms) 0.0)

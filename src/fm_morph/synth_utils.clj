@@ -84,9 +84,10 @@
          :env-a-c (nth bus-vals (+ settings/base-env-bus-ndx 6))
          :env-d-c (nth bus-vals (+ settings/base-env-bus-ndx 7))
          :env-r-c (nth bus-vals (+ settings/base-env-bus-ndx 8))
-         :env-bias (nth bus-vals (+ settings/base-cntl-bus-ndx 0))
-         :freq-ratio (nth bus-vals (+ settings/base-cntl-bus-ndx 1))
-         :vol (nth bus-vals (+ settings/base-cntl-bus-ndx 2))
+         :env-bias (nth bus-vals (+ settings/base-cntrl-bus-ndx 0))
+         :freq-ratio (nth bus-vals (+ settings/base-cntrl-bus-ndx 1))
+         :vol (nth bus-vals (+ settings/base-cntrl-bus-ndx
+                               settings/cntrl-vol-ndx))
          }
         ))
     )
