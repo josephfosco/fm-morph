@@ -24,6 +24,7 @@
 (def base-env-bus-ndx num-operators)
 (def base-cntrl-bus-ndx (+ base-env-bus-ndx 9))
 
+(def cntrl-ratio-ndx 1)
 (def cntrl-vol-ndx 2)
 
 (def patch-directory "./patches/")
