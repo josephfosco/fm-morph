@@ -50,6 +50,14 @@
     )
   )
 
+(defn round-dec
+ [precision d]
+  (let [factor (Math/pow 10 precision)
+        rtn-val (/ (Math/round (* d factor)) factor)]
+    (println "val:" d "rtn:" rtn-val)
+    rtn-val
+    ))
+
 (defn scale-mod-lvl
   "Scales raw values from -50 to 50 to -5 to 5"
   [val]
@@ -72,11 +80,13 @@
      [oper mod-to-oper change-amt]
      (let [cntl-bus-val ((cntl-bus-vals oper)
                          (+ mod-to-oper settings/base-mod-lvl-bus-ndx))
+           cur @cntl-bus-val
            new-mod-lvl (reset!
                         cntl-bus-val
-                        (+ (scale-mod-lvl change-amt) @cntl-bus-val))
+                        (round-dec 1 (+ (scale-mod-lvl change-amt)
+                                        @cntl-bus-val)))
            ]
-       (println (str "out-mod-lvl" mod-to-oper) ": " new-mod-lvl)
+       (println (str "cur-mod-lvl " cur " out-mod-lvl" mod-to-oper) ": " new-mod-lvl)
        (ctl (sy/mod-lvl-synths oper)
             (keyword (str "out-mod-lvl" mod-to-oper))
             new-mod-lvl)
@@ -89,7 +99,8 @@
                          (+ settings/cntrl-vol-ndx settings/base-cntrl-bus-ndx))
            new-mod-lvl (reset!
                         cntl-bus-val
-                        (+ (scale-vol-lvl change-amt) @cntl-bus-val))
+                        (round-dec 2 (+ (scale-vol-lvl change-amt)
+                                        @cntl-bus-val)))
            ]
        (println (str "out-vol-lvl") ": " new-mod-lvl)
        (ctl (sy/cntl-synths oper) :volume new-mod-lvl)
@@ -103,7 +114,8 @@
                             settings/base-cntrl-bus-ndx))
            new-mod-lvl (reset!
                         cntl-bus-val
-                        (+ (scale-ratio change-amt) @cntl-bus-val))
+                        (round-dec 1 (+ (scale-ratio change-amt)
+                                        @cntl-bus-val)))
            ]
        (println (str "out-ratio") ": " new-mod-lvl)
        (ctl (sy/cntl-synths oper) :freq-ratio new-mod-lvl)
