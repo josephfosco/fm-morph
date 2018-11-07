@@ -78,9 +78,11 @@
          :env-d-l (nth bus-vals (+ settings/base-env-bus-ndx 0))
          :env-s-l (nth bus-vals (+ settings/base-env-bus-ndx 1))
          :env-dly-t (nth bus-vals (+ settings/base-env-bus-ndx 2))
-         :env-a-t (nth bus-vals (+ settings/base-env-bus-ndx 3))
+         :env-a-t (nth bus-vals (+ settings/base-env-bus-ndx
+                                   settings/env-a-t-ndx))
          :env-d-t (nth bus-vals (+ settings/base-env-bus-ndx 4))
-         :env-r-t (nth bus-vals (+ settings/base-env-bus-ndx 5))
+         :env-r-t (nth bus-vals (+ settings/base-env-bus-ndx
+                                   settings/env-r-t-ndx))
          :env-a-c (nth bus-vals (+ settings/base-env-bus-ndx 6))
          :env-d-c (nth bus-vals (+ settings/base-env-bus-ndx 7))
          :env-r-c (nth bus-vals (+ settings/base-env-bus-ndx 8))

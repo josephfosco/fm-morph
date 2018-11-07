@@ -52,25 +52,11 @@
 
 (defn round-dec
  [precision d]
-  (let [factor (Math/pow 10 precision)
-        rtn-val (/ (Math/round (* d factor)) factor)]
-    (println "val:" d "rtn:" rtn-val)
-    rtn-val
+  (let [factor (Math/pow 10 precision)]
+    (/ (Math/round (* d factor)) factor)
     ))
 
 (defn scale-mod-lvl
-  "Scales raw values from -50 to 50 to -5 to 5"
-  [val]
-  (/ val 10)
-  )
-
-(defn scale-vol-lvl
-  "Scales raw values from -50 to 50 to -0.5 to 0.5"
-  [val]
-  (/ val 100)
-  )
-
-(defn scale-ratio
   "Scales raw values from -50 to 50 to -5 to 5"
   [val]
   (/ val 10)
@@ -93,6 +79,12 @@
        )
      )
 
+(defn scale-vol-lvl
+  "Scales raw values from -50 to 50 to -0.5 to 0.5"
+  [val]
+  (/ val 100)
+  )
+
 (defn change-vol-lvl
      [oper change-amt]
      (let [cntl-bus-val ((cntl-bus-vals oper)
@@ -106,6 +98,12 @@
        (ctl (sy/cntl-synths oper) :volume new-mod-lvl)
        )
      )
+
+(defn scale-ratio
+  "Scales raw values from -50 to 50 to -5 to 5"
+  [val]
+  (/ val 10)
+  )
 
 (defn change-ratio
      [oper change-amt]
@@ -122,12 +120,58 @@
        )
      )
 
+(defn scale-env-a-t
+  "Scales raw values from -50 to 50 to -5 to 5"
+  [val]
+  (/ val 10)
+  )
+
+(defn change-env-attack
+     [oper change-amt]
+     (let [env-bus-val ((cntl-bus-vals oper)
+                        (+ settings/env-a-t-ndx
+                           settings/base-env-bus-ndx))
+           new-a-t-lvl (reset!
+                        env-bus-val
+                        (max 0
+                             (round-dec 1 (+ (scale-env-a-t change-amt)
+                                             @env-bus-val))))
+           ]
+       (println "env-a-t:" new-a-t-lvl)
+       (ctl (sy/env-synths oper) :env-a-t new-a-t-lvl)
+       )
+     )
+
+(defn scale-env-r-t
+  "Scales raw values from -50 to 50 to -5 to 5"
+  [val]
+  (/ val 10)
+  )
+
+(defn change-env-release
+     [oper change-amt]
+     (let [env-bus-val ((cntl-bus-vals oper)
+                        (+ settings/env-r-t-ndx
+                           settings/base-env-bus-ndx))
+           new-r-t-lvl (reset!
+                        env-bus-val
+                        (max 0
+                             (round-dec 1 (+ (scale-env-r-t change-amt)
+                                             @env-bus-val))))
+           ]
+       (println "env-r-t:" new-r-t-lvl)
+       (ctl (sy/env-synths oper) :env-r-t new-r-t-lvl)
+       )
+     )
+
 (defn process-cntrlr-input
   [bank btn val]
   (cond
     (and (< bank 4) (< btn 4)) (change-mod-lvl bank btn val)
     (and (< bank 4) (= btn 4)) (change-vol-lvl bank val)
     (and (< bank 4) (= btn 5)) (change-ratio bank val)
+    (and (< bank 4) (= btn 6)) (change-env-attack bank val)
+    (and (< bank 4) (= btn 7)) (change-env-release bank val)
     (= 9 bank btn) (trigger-synth val)
     :else (println "ERROR: Invalid controller values - bank:" bank, "btn:" btn, "val:" val)
     )

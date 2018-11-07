@@ -24,6 +24,9 @@
 (def base-env-bus-ndx num-operators)
 (def base-cntrl-bus-ndx (+ base-env-bus-ndx 9))
 
+(def env-a-t-ndx 3)
+(def env-r-t-ndx 5)
+
 (def cntrl-ratio-ndx 1)
 (def cntrl-vol-ndx 2)
 
